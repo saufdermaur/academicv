@@ -1,0 +1,22 @@
+version: 6
+environments:
+  default:
+    channels:
+    - url: https://conda.anaconda.org/conda-forge/
+    packages:
+      osx-64:
+      - conda: https://conda.anaconda.org/conda-forge/osx-64/typst-0.13.1-h371c88c_0.conda
+packages:
+- conda: https://conda.anaconda.org/conda-forge/osx-64/typst-0.13.1-h371c88c_0.conda
+  sha256: 7c320df991c56ade073c10aa355c3a7e8ac703f86451a75e1ddd767319570ca3
+  md5: 862e2fc72a26889f37f8df9fbb2ba08e
+  depends:
+  - __osx >=10.13
+  constrains:
+  - __osx >=10.13
+  arch: x86_64
+  platform: osx
+  license: Apache-2.0
+  license_family: Apache
+  size: 12968167
+  timestamp: 1741356652899

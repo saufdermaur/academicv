@@ -1,16 +1,16 @@
 [package]
-name = "imprecv"
+name = "academicv"
 version = "1.0.0"
-compiler = "0.11.0"
+compiler = "0.13.1"
 entrypoint = "cv.typ"
-authors = ["Je Sian Keith Herman <https://jskherman.com>"]
+authors = [ "Mikkel Roald-Arbøl <https://roald-arboel.com>", "Je Sian Keith Herman <https://jskherman.com>"]
 license = "Apache-2.0"
 description = "A no-frills curriculum vitae (CV) template using Typst and YAML to version control CV data."
-keywords = ["CV", "Curriculum Vitae", "Resume", "Minimalistic", "Professional", "YAML", "Data"]
+keywords = ["CV", "Curriculum Vitae", "Resume", "Minimalistic", "Academic", "Academia", "Science", "YAML", "Data"]
 categories = ["cv"]
 disciplines = []
-homepage = "https://github.com/jskherman/imprecv"
-repository = "https://github.com/jskherman/imprecv"
+homepage = "https://github.com/roaldarbol/academicv"
+repository = "https://github.com/roaldarbol/academicv"
 
 
 [template]
