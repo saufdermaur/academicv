@@ -1,4 +1,4 @@
-# yaml-language-server: $schema=https://raw.githubusercontent.com/jskherman/imprecv/main/cv.typ.schema.json
+# yaml-language-server: $schema=https://raw.githubusercontent.com/roaldarbol/academicv/main/cv.typ.schema.json
 
 # Document settings
 settings:
@@ -41,7 +41,7 @@ sections:
   - key: personal
     layout: heading
     show: true
-    # No entries for personal - uses the top-level personal section
+    # No entries or title for personal - uses the top-level personal section
 
   - key: education
     layout: timeline_institution

@@ -3,7 +3,7 @@
   "$id": "https://raw.githubusercontent.com/roaldarbol/academicv/main/cv.typ.schema.json",
   "type": "object",
   "default": {},
-  "title": "imprecv data schema",
+  "title": "academicv data schema",
   "required": [
     "personal",
     "sections"
