@@ -5,9 +5,11 @@ settings:
   headingfont: "Libertinus Serif"
   bodyfont: "Libertinus Serif"
   fontsize: 10pt      # Must be a string with unit
-  linespacing: 6pt    # Must be a string with unit
   sectionspacing: 12pt  # Must be a string with unit
-  hyperlink_color: rgb(230, 130, 87)
+  entry_spacing: 0.1em    # Space between timeline entries
+  element_spacing: 3pt
+  linespacing: 5pt    # Must be a string with unit
+  hyperlink_color: rgb(230, 130, 87)   # Can be either a colour string or a rgb() value
   show_address: false
   show_number: false
   show_title: false
@@ -44,7 +46,9 @@ sections:
     # No entries or title for personal - uses the top-level personal section
 
   - key: education
-    layout: timeline_institution
+    layout: timeline
+    primary_element: ["institution"]
+    secondary_element: ["title"]
     title: Education
     show: true
     entries:
@@ -65,7 +69,10 @@ sections:
         end_date: 2016
 
   - key: experience
-    layout: timeline_institution
+    layout: timeline
+    primary_element: ["institution"]
+    secondary_element: ["advisors"]  # Explicitly include advisors at secondary level
+    tertiary_element: ["description"]
     title: Experience
     show: true
     entries:
@@ -76,7 +83,7 @@ sections:
         description: |
           Some long text describing what I did for this project.
       - institution: University of Copenhagen
-        advisors: ["Rune W. Berg"]
+        advisors: ["Rune W. Berg", "Tom Cat"]
         start_date: 10/2019
         end_date: 1/2020
         description: |
@@ -111,15 +118,17 @@ sections:
     title: Publications
     show: true
     entries:
-      citations:
-        - "*Roald-Arbøl, M.*, Yarwood, E., Fernandes, A. S. D., Moubarak, E. M., Drees, C., Schuett, W., & Niven, J. E. (2025). A Low-Cost Trackball System for Automated Movement Capture Allowing Assessment of the Repeatability of Movement for Behavioural Ecology. _In prep_"
+      - "*Roald-Arbøl, M.*, Yarwood, E., Fernandes, A. S. D., Moubarak, E. M., Drees, C., Schuett, W., & Niven, J. E. (2025). A Low-Cost Trackball System for Automated Movement Capture Allowing Assessment of the Repeatability of Movement for Behavioural Ecology. _In prep_"
 
-        - "Sobianin, I., Ngotho, S. G., Spector, M. B., *Roald-Arbøl, M.*, Vignal, E., Perineti, C. L., Ellison, L., Al Balush, S., Carriero, A., Eley, M., Cozan, M., Demirbatir, C., Dominiak, S. E., Janiak, F., Frazao, J., Maravall, M., Lagnado, L., Schröder, S., Kemenes, G., Baden T., Niven J. E., King S., Nowotny T., Chagas, A. M. (2025). BeeHive: A flexible open electronics platform for designing research equipment. _In prep_"
+      - "Sobianin, I., Ngotho, S. G., Spector, M. B., *Roald-Arbøl, M.*, Vignal, E., Perineti, C. L., Ellison, L., Al Balush, S., Carriero, A., Eley, M., Cozan, M., Demirbatir, C., Dominiak, S. E., Janiak, F., Frazao, J., Maravall, M., Lagnado, L., Schröder, S., Kemenes, G., Baden T., Niven J. E., King S., Nowotny T., Chagas, A. M. (2025). BeeHive: A flexible open electronics platform for designing research equipment. _In prep_"
 
-        - "Verbinnen, G., *Roald-Arbøl, M.*, Niven, J. E., & Nicholls, E. (2024). Shifts in honeybee worker metabolism immediately post-eclosion (p. 2024.12.01.622772). _bioRxiv_. https://doi.org/10.1101/2024.12.01.622772"
+      - "Verbinnen, G., *Roald-Arbøl, M.*, Niven, J. E., & Nicholls, E. (2024). Shifts in honeybee worker metabolism immediately post-eclosion (p. 2024.12.01.622772). _bioRxiv_. https://doi.org/10.1101/2024.12.01.622772"
 
   - key: teaching
-    layout: timeline_title
+    layout: timeline
+    primary_element: ["title", "institution"]
+    secondary_element: ["professors"]  # Explicitly include advisors at secondary level
+    tertiary_element: ["description"]
     title: Teaching
     show: true
     entries:
@@ -159,7 +168,9 @@ sections:
           Some more text
 
   - key: awards
-    layout: timeline_title
+    layout: timeline
+    primary_element: ["title", "institution"]
+    tertiary_element: ["description"]
     title: Scholarships & Awards
     show: true
     entries:

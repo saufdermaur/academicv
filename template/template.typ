@@ -6,6 +6,19 @@
 // Import your CV data
 #let cv_data = yaml("template.yml")
 
+// Validate that required fields exist in each section
+#for section in cv_data.sections {
+  if "key" not in section {
+    panic("Missing 'key' in section: " + str(section))
+  }
+  if "layout" not in section {
+    panic("Missing 'layout' in section with key: " + section.key)
+  }
+  if "title" not in section and section.key != "personal" {
+    warn("Missing 'title' in section with key: " + section.key)
+  }
+}
+
 // Get settings from YAML file
 #let settings = cv_data.settings
 
@@ -99,6 +112,12 @@
   if "sectionspacing" in settings {
     settings.sectionspacing = convert_string_to_length(settings.sectionspacing)
   }
+  if "entry_spacing" in settings {
+    settings.entry_spacing = convert_string_to_length(settings.entry_spacing)
+  }
+  if "element_spacing" in settings {
+    settings.element_spacing = convert_string_to_length(settings.element_spacing)
+  }
   if "page" in settings and "margin" in settings.page {
     settings.page.margin = convert_string_to_length(settings.page.margin)
   }
@@ -167,20 +186,35 @@
 
 // Function to create data for a section that uses the new structure
 #let get_section_data(section, cv_data) = {
+  // Create a dictionary that will hold all relevant section data
+  let result = (:)
+  
   // First check if this section has entries in it
   if "entries" in section {
-    // Just return the entries directly - they should be in the right format
-    // This handles both array entries and dictionary entries
-    return section.entries
+    // Add entries to result
+    result.insert("entries", section.entries)
   } else {
     // If the section doesn't have entries, use the existing top-level data
     if section.key in cv_data {
-      return cv_data.at(section.key)
+      result.insert("entries", cv_data.at(section.key))
     } else {
-      // Return an empty dictionary if data is not found
-      return (:)
+      // Set empty array if data is not found
+      result.insert("entries", [])
     }
   }
+  
+  // Add layout configuration if present
+  if "primary_element" in section {
+    result.insert("primary_element", section.primary_element)
+  }
+  if "secondary_element" in section {
+    result.insert("secondary_element", section.secondary_element)
+  }
+  if "tertiary_element" in section {
+    result.insert("tertiary_element", section.tertiary_element)
+  }
+  
+  return result
 }
 
 #show: doc => cvinit(doc)
@@ -204,15 +238,23 @@
         // Create a temporary dictionary with just this section's data
         let temp_data = (
           personal: cv_data.personal,  // Keep personal for reference
-          (key): section_data,         // Add this section's data
+          (key): section_data.entries,  // Add this section's entries
         )
         
+        // Add layout configuration if present
+        if "primary_element" in section_data {
+          temp_data.insert("primary_element", section_data.primary_element)
+        }
+        if "secondary_element" in section_data {
+          temp_data.insert("secondary_element", section_data.secondary_element)
+        }
+        if "tertiary_element" in section_data {
+          temp_data.insert("tertiary_element", section_data.tertiary_element)
+        }
+        
         // Call cvsection with the appropriate data
-        cvsection(temp_data, layout: layout, section: key, title: title)
+        cvsection(temp_data, layout: layout, section: key, settings: settings, title: title)
       }
     }
   }
 }
-
-// Add the endnote
-// #endnote(settings)

@@ -124,199 +124,242 @@
     ]
 }
 
-// Individual Layout Functions
-// ===========================
-// layout_text
-// layout_education
-// start_time, end_time, institution, location, title
 
-// layout_work
-// institution, (sub_employer), advisor, description
+// ----------------------------------- //
+// ------------- Layouts ------------- //
+// ----------------------------------- //
 
-// layout_publications
-// citation (make it automatically bold the name)
-
-// layout_presentations
-// year, institution, place, title
-
-// layout_awards
-// year, institution, title
-
-// layout_teaching
-// year, position, course_title, (professor), description
-
-#let layout_timeline_institution(data, isbreakable: true) = {
-  let year_column_width = 7em
-  let line_pos = year_column_width + 0.5em
-  
-  // Create the container with relative positioning for the line
-  block(width: 100%, breakable: isbreakable, inset: 0pt, outset: 0pt)[
-    
-    // Content
-    #for (i, edu) in data.enumerate() {
-      let year_text = if "end_date" in edu and edu.end_date != none {
-        if "start_date" in edu and edu.start_date != none {
-          if edu.end_date == "present" or edu.end_date == "Present" {
-            [#edu.start_date - Present]
-          } else if edu.start_date == edu.end_date{
-            [#edu.start_date]
-          } else {
-            [#edu.start_date - #edu.end_date]
-          }
-        } else {
-          [#edu.end_date]
-        }
-      } else if "start_date" in edu and edu.start_date != none {
-        [#edu.start_date]
-      } else {
-        []
-      }
-      
-      // Create a grid for this entry
-      grid(
-        columns: (year_column_width, 1fr),
-        gutter: 1em,
-        
-        // Year column (right-aligned)
-        align(right)[#year_text],
-
-        grid.vline(),
-        
-        // Institution details
-        pad(left: 0.5em)[
-            #if "institution" in edu and edu.institution != none {
-                text(weight: "bold")[#edu.institution]
-                if "location" in edu and edu.location != none {
-                    [, #edu.location]
-                }
-                linebreak()
-            }
-            #if "title" in edu and edu.title != none [
-                // #linebreak()
-                #text(style: "italic")[#edu.title]
-                #linebreak()
-            ]
-            #if "advisors" in edu and edu.advisors != none {
-                // #linebreak()
-                text(style: "italic")[
-                    #if edu.advisors.len() == 1 [Advisor:] else [Advisors:]
-                ] 
-                text[
-                    #if edu.advisors.len() == 1 [
-                        #edu.advisors.at(0)
-                    ] else if edu.advisors.len() == 2 [
-                        #edu.advisors.at(0) and #edu.advisors.at(1)
-                    ] else [
-                        #for (i, advisor) in edu.advisors.enumerate() [
-                            #if i == edu.advisors.len() - 1 [
-                                and #advisor
-                            ] else if i == edu.advisors.len() - 2 [
-                                #advisor 
-                            ] else [
-                                #advisor, 
-                            ]
-                        ]
-                    ]
-                ]
-                linebreak()
-            }
-            #if "description" in edu and edu.description != none {
-                // v(0.02em)
-                text(size: 8pt)[#edu.description]
-            }
-        ]
-      )
-      
-      // Add space between entries except after the last one
-      if i < data.len() - 1 {
-        v(0.1em)
-      }
-    }
-  ]
+#let layout_header(info, isbreakable: true) = {
+  cvheading(info, settings)
 }
 
-#let layout_timeline_title(data, isbreakable: true) = {
+#let layout_timeline(data, primary_element: none, secondary_element: none, tertiary_element: none, settings: none, isbreakable: true) = {
+  // Get the global settings
   let year_column_width = 7em
-  let line_pos = year_column_width + 0.5em
   
-  // Create the container with relative positioning for the line
-  block(width: 100%, breakable: isbreakable, inset: 0pt, outset: 0pt)[
+  // Get spacing settings with defaults
+  let entry_spacing = settings.at("entry_spacing", default: 0.5em)
+  let element_spacing = -1em + settings.at("element_spacing", default: 2pt) // Space between primary/secondary/tertiary
+  
+  // Convert single elements to arrays for consistent handling
+  let primary = if type(primary_element) == array { primary_element } else { (primary_element,) }
+  let secondary = if type(secondary_element) == array { secondary_element } else { (secondary_element,) }
+  let tertiary = if type(tertiary_element) == array { tertiary_element } else { (tertiary_element,) }
+  
+  // List of mentor types for special handling
+  let mentor_types = (
+    (key: "advisors", singular: "Advisor", plural: "Advisors"),
+    (key: "professors", singular: "Professor", plural: "Professors"),
+    (key: "supervisors", singular: "Supervisor", plural: "Supervisors")
+  )
+  
+ // Helper function to check if a field is a mentor type
+  let is_mentor_type(field) = {
+    for type in mentor_types {
+      if field == type.key {
+        return true
+      }
+    }
+    return false
+  }
+  
+  // Helper function to format mentor lists
+  let format_mentors(entry, key) = {
+    let mentor_type = mentor_types.find(t => t.key == key)
+    if mentor_type == none { return none }
     
-    // Content
-    #for (i, edu) in data.enumerate() {
-      let year_text = if "end_date" in edu and edu.end_date != none {
-        if "start_date" in edu and edu.start_date != none {
-          if edu.end_date == "present" or edu.end_date == "Present" {
-            [#edu.start_date - Present]
-          } else if edu.start_date == edu.end_date{
-            [#edu.start_date]
+    let mentors = entry.at(key, default: none)
+    if mentors == none or mentors.len() == 0 { return none }
+    
+    // Create the label part in italic
+    let label = if mentors.len() == 1 { mentor_type.singular + ":" } else { mentor_type.plural + ":" }
+    
+    // Format the mentor names
+    let names = if mentors.len() == 1 {
+      mentors.at(0)
+    } else if mentors.len() == 2 {
+      [#mentors.at(0) and #mentors.at(1)]
+    } else {
+      let result = []
+      for (i, mentor) in mentors.enumerate() {
+        if i == mentors.len() - 1 {
+          result = result + [and #mentor]
+        } else if i == mentors.len() - 2 {
+          result = result + [#mentor ]
+        } else {
+          result = result + [#mentor, ]
+        }
+      }
+      result
+    }
+    
+    // Combine the label and names
+    [#text(style: "italic")[#label] #names]
+  }
+  
+  // Create the container block
+  block(width: 100%, breakable: isbreakable, inset: 0pt, outset: 0pt)[
+    // Process each entry
+    #for (i, entry) in data.enumerate() {
+      // Format year text
+      let year_text = if "end_date" in entry and entry.end_date != none {
+        if "start_date" in entry and entry.start_date != none {
+          if entry.end_date == "present" or entry.end_date == "Present" {
+            [#entry.start_date - Present]
+          } else if entry.start_date == entry.end_date {
+            [#entry.start_date]
           } else {
-            [#edu.start_date - #edu.end_date]
+            [#entry.start_date - #entry.end_date]
           }
         } else {
-          [#edu.end_date]
+          [#entry.end_date]
         }
-      } else if "start_date" in edu and edu.start_date != none {
-        [#edu.start_date]
+      } else if "start_date" in entry and entry.start_date != none {
+        [#entry.start_date]
       } else {
         []
       }
       
-      // Create a grid for this entry
+      // Create grid for this entry
       grid(
         columns: (year_column_width, 1fr),
         gutter: 1em,
         
-        // Year column (right-aligned)
+        // Year column
         align(right)[#year_text],
-
+        
         grid.vline(),
         
-        // Institution details
+        // Entry details with configurable spacing
         pad(left: 0.5em)[
-            #if "title" in edu and edu.title != none {
-                text(weight: "bold")[#edu.title]
-                linebreak()
+          // PRIMARY ELEMENTS SECTION
+          
+          // First primary element (bold)
+          #let first_primary_found = false
+          #let first_primary_field = none
+          #let first_primary_content = none
+          
+          // Find the first available primary element
+          #for field in primary {
+            if field in entry and entry.at(field) != none and not first_primary_found {
+              first_primary_field = field
+              first_primary_content = entry.at(field)
+              first_primary_found = true
+              break
             }
-            #if "institution" in edu and edu.institution != none [
-                // #linebreak()
-                #text(style: "italic")[#edu.institution]
-                #linebreak()
+          }
+          
+          // Display first primary element in bold if found
+          #if first_primary_found {
+            text(weight: "bold")[#first_primary_content]
+            
+            // Handle location specially for institution
+            if first_primary_field == "institution" and "location" in entry and entry.location != none {
+              [, #entry.location]
+            }
+            
+            // Check for other primary elements to display in normal weight
+            let additional_primary = ()
+            for field in primary {
+              if field != first_primary_field and field in entry and entry.at(field) != none {
+                additional_primary.push(entry.at(field))
+              }
+            }
+            
+            // Add additional primary elements if any
+            if additional_primary.len() > 0 {
+              [, #additional_primary.join(", ")]
+            }
+          }
+          
+          // SECONDARY ELEMENTS SECTION
+          
+          // Collect all secondary elements
+          #let secondary_content = ()
+          
+          // Regular secondary elements
+          #for field in secondary {
+            if not is_mentor_type(field) and field in entry and entry.at(field) != none {
+              secondary_content.push(entry.at(field))
+            }
+          }
+          
+          // Add mentor fields from secondary
+          #for field in secondary {
+            if is_mentor_type(field) {
+              let mentor_text = format_mentors(entry, field)
+              if mentor_text != none {
+                secondary_content.push(mentor_text)
+              }
+            }
+          }
+          
+          // Add mentor types not explicitly in secondary
+          #for type in mentor_types {
+            if type.key not in secondary and type.key in entry and entry.at(type.key) != none {
+              let mentor_text = format_mentors(entry, type.key)
+              if mentor_text != none {
+                secondary_content.push(mentor_text)
+              }
+            }
+          }
+          
+          // Display secondary content if exists
+          #if secondary_content.len() > 0 and first_primary_found {
+            v(element_spacing) // Add spacing between primary and secondary
+            
+            // We need to handle secondary content differently
+            // For regular secondary elements (not advisor/professor), use italic
+            // For advisor/professor elements, they are already formatted correctly
+            let regular_secondary = ()
+            let special_secondary = ()
+            
+            for item in secondary_content {
+              if type(item) == str {
+                regular_secondary.push(item)
+              } else {
+                special_secondary.push(item)
+              }
+            }
+            
+            // Display regular secondary elements in italic if any exist
+            if regular_secondary.len() > 0 {
+              text(style: "italic")[#regular_secondary.join(", ")]
+            }
+            
+            // Display special secondary elements (already formatted) if any exist
+            if special_secondary.len() > 0 {
+              if regular_secondary.len() > 0 { [, ] }
+              special_secondary.join(", ")
+            }
+          }
+          
+          // TERTIARY ELEMENTS SECTION
+          
+          // Collect tertiary elements
+          #let tertiary_content = ()
+          #for field in tertiary {
+            if field in entry and entry.at(field) != none {
+              tertiary_content.push(entry.at(field))
+            }
+          }
+          
+          // Display tertiary content if exists
+          #if tertiary_content.len() > 0 {
+            if first_primary_found or secondary_content.len() > 0 {
+              v(element_spacing) // Add spacing before tertiary
+            }
+            
+            text(size: 8pt)[
+              #tertiary_content.join(", ")
             ]
-            #if "professors" in edu and edu.professors != none {
-                // #linebreak()
-                text(style: "italic")[
-                    #if edu.professors.len() == 1 [Professor:] else [Professors:]
-                ] 
-                text[
-                    #if edu.professors.len() == 1 [
-                        #edu.professors.at(0)
-                    ] else if edu.professors.len() == 2 [
-                        #edu.professors.at(0) and #edu.professors.at(1)
-                    ] else [
-                        #for (i, professor) in edu.professors.enumerate() [
-                            #if i == edu.professors.len() - 1 [
-                                and #professor
-                            ] else if i == edu.professors.len() - 2 [
-                                #professor 
-                            ] else [
-                                #professor, 
-                            ]
-                        ]
-                    ]
-                ]
-                linebreak()
-            }
-            #if "description" in edu and edu.description != none {
-                // v(0.02em)
-                text(size: 8pt)[#edu.description]
-            }
+          }
         ]
       )
       
-      // Add space between entries except after the last one
+      // Add configurable space between entries
       if i < data.len() - 1 {
-        v(0.1em)
+        v(entry_spacing)
       }
     }
   ]
@@ -327,9 +370,9 @@
   let number_width = 2em
   
   block(width: 100%, breakable: isbreakable)[
-    // Check if we have citations
-    #if "citations" in data and data.citations != none {
-      for (index, citation) in data.citations.enumerate() {
+    // Check if data is an array (direct list of citations)
+    #if type(data) == array {
+      for (index, citation) in data.enumerate() {
         // Create a grid with two columns
         grid(
           columns: (number_width, 1fr),
@@ -343,38 +386,30 @@
         )
         
         // Add space between entries
-        if index < data.citations.len() - 1 {
+        if index < data.len() - 1 {
           v(0.05em)
         }
       }
     } else {
-      [No publications found]
+      [No entries found]
     }
   ]
 }
 
-// Publications layout
-// #let layout_publications(data, isbreakable: true) = {
-//     for pub in data {
-//         // Parse ISO date strings into datetime objects
-//         let date = utils.strpdate(pub.releaseDate)
-//         // Create a block layout for each publication entry
-//         block(width: 100%, breakable: isbreakable)[
-//             // Line 1: Publication Title
-//             #if pub.url != none [
-//                 *#link(pub.url)[#pub.name]* \
-//             ] else [
-//                 *#pub.name* \
-//             ]
-//             // Line 2: Publisher and Date
-//             #if pub.publisher != none [
-//                 Published on #text(style: "italic")[#pub.publisher]  #h(1fr) #date \
-//             ] else [
-//                 In press \
-//             ]
-//         ]
-//     }
-// }
+#let layout_prose(data, isbreakable: true) = {
+  block(width: 100%, breakable: isbreakable)[
+    #if type(data) == str {
+      [#data]
+    } else if type(data) == array {
+      for item in data {
+        [#item]
+        if item != data.last() { linebreak() }
+      }
+    } else {
+      [No valid prose content found]
+    }
+  ]
+}
 
 // Skills layout
 #let layout_skills(data, languages, interests, isbreakable: true) = {
@@ -397,21 +432,9 @@
     ]
 }
 
-// References layout
-#let layout_references(data, isbreakable: true) = {
-    for ref in data {
-        block(width: 100%, breakable: isbreakable)[
-            #if ("url" in ref) and (ref.url != none) [
-                - *#link(ref.url)[#ref.name]*: "#ref.reference"
-            ] else [
-                - *#ref.name*: "#ref.reference"
-            ]
-        ]
-    }
-}
 
 // Main section rendering function
-#let cvsection(info, layout: none, section: none, title: none, isbreakable: true) = {
+#let cvsection(info, layout: none, section: none, title: none, settings: none, isbreakable: true) = {
     // Use the provided section, or default to the layout name if no section is specified
     let section_key = if section == none { layout } else { section }
     
@@ -430,8 +453,18 @@
                 // Use the appropriate layout function based on layout
                 #if layout == "prose" {
                     layout_prose(info.at(section_key), isbreakable: isbreakable)
-                } else if layout == "timeline_institution" {
-                    layout_timeline_institution(info.at(section_key), isbreakable: isbreakable)
+                } else if layout == "timeline" {
+                    // Get the primary, secondary, tertiary elements from the section if they exist
+                    let primary = if "primary_element" in info { info.primary_element } else { "none" }
+                    let secondary = if "secondary_element" in info { info.secondary_element } else { "none" }
+                    let tertiary = if "tertiary_element" in info { info.tertiary_element } else { "none" }
+                    
+                    layout_timeline(info.at(section_key), 
+                                   primary_element: primary, 
+                                   secondary_element: secondary, 
+                                   tertiary_element: tertiary, 
+                                   settings: settings,
+                                   isbreakable: isbreakable)
                 } else if layout == "timeline_title" {
                     layout_timeline_title(info.at(section_key), isbreakable: isbreakable)
                 } else if layout == "numbered_list" {
