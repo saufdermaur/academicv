@@ -397,16 +397,35 @@
 }
 
 #let layout_prose(data, isbreakable: true) = {
+  // Set left margin to match the numbered list for consistency
+  let left_margin = 2em
+  
   block(width: 100%, breakable: isbreakable)[
-    #if type(data) == str {
-      [#data]
-    } else if type(data) == array {
-      for item in data {
-        [#item]
-        if item != data.last() { linebreak() }
+    // Check if data is an array (direct list of citations/text items)
+    #if type(data) == array {
+      for (index, item) in data.enumerate() {
+        // Create a grid with a single column but padded to match numbered list
+        grid(
+          columns: (1fr),
+          
+          // Item text with markup, padded from the left to align with numbered list
+          pad(left: left_margin)[
+            #eval(item, mode: "markup")
+          ]
+        )
+        
+        // Add space between entries
+        if index < data.len() - 1 {
+          v(0.05em)
+        }
       }
+    } else if type(data) == str {
+      // If it's a single string, just display it with the same padding
+      pad(left: left_margin)[
+        #eval(data, mode: "markup")
+      ]
     } else {
-      [No valid prose content found]
+      [No entries found]
     }
   ]
 }
@@ -436,7 +455,7 @@
 // Main section rendering function
 #let cvsection(info, layout: none, section: none, title: none, settings: none, isbreakable: true) = {
     // Use the provided section, or default to the layout name if no section is specified
-    let section_key = if section == none { layout } else { section }
+    let section_key = section
     
     // Set default title based on layout type if not provided
     let section_title = title
@@ -465,8 +484,6 @@
                                    tertiary_element: tertiary, 
                                    settings: settings,
                                    isbreakable: isbreakable)
-                } else if layout == "timeline_title" {
-                    layout_timeline_title(info.at(section_key), isbreakable: isbreakable)
                 } else if layout == "numbered_list" {
                     layout_numbered_list(info.at(section_key), isbreakable: isbreakable)
                 } else {

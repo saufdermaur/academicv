@@ -5,10 +5,10 @@ settings:
   headingfont: "Libertinus Serif"
   bodyfont: "Libertinus Serif"
   fontsize: 10pt      # Must be a string with unit
-  sectionspacing: 12pt  # Must be a string with unit
-  entry_spacing: 0.1em    # Space between timeline entries
-  element_spacing: 3pt
-  linespacing: 5pt    # Must be a string with unit
+  sectionspacing: 12pt  # Space between sections. Must be a string with unit
+  entry_spacing: 0.1em  # Space between entries within a section. Must be a string with unit
+  element_spacing: 3pt  # Space between elements within an entry. Must be a string with unit
+  linespacing: 5pt      # Space between lines within an element. Must be a string with unit
   hyperlink_color: rgb(230, 130, 87)   # Can be either a colour string or a rgb() value
   show_address: false
   show_number: false
