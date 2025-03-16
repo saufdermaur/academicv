@@ -9,7 +9,7 @@
  </a>
 </p>
 
-*academicv* is a clean academic curriculum vitae (CV) template using Typst and YAML.
+*academicv* is a clean, flexible curriculum vitae (CV) template using Typst and YAML.
 
 ## Key Features
 
