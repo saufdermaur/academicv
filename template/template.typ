@@ -6,81 +6,35 @@
 // Import your CV data
 #let cv_data = yaml("template.yml")
 
+// Validate that required fields exist in each section
+#for section in cv_data.sections {
+  if "key" not in section {
+    panic("Missing 'key' in section: " + str(section))
+  }
+  if "layout" not in section {
+    panic("Missing 'layout' in section with key: " + section.key)
+  }
+  if "title" not in section and section.key != "personal" {
+    warn("Missing 'title' in section with key: " + section.key)
+  }
+}
+
 // Get settings from YAML file
 #let settings = cv_data.settings
 
 // Define default settings if not present in YAML
 #let default_settings = (
-    headingfont: "Libertinus Serif",
-    bodyfont: "Libertinus Serif",
-    fontsize: 10pt,
-    linespacing: 6pt,
-    sectionspacing: 12pt,
-    showAddress: true,
-    showNumber: false,
-    showTitle: false,
-    headingsmallcaps: false,
-    sendnote: false,
+  font_heading: "Libertinus Serif",
+  font_body: "Libertinus Serif",
+  fontsize: 10pt,         // Must be a string with unit
+  spacing_section: 12pt,  // Space between sections. Must be a string with unit
+  spacing_entry: 0.1em,   // Space between entries within a section. Must be a string with unit
+  spacing_element: 3pt,   // Space between elements within an entry. Must be a string with unit
+  spacing_line: 5pt,      // Space between lines within an element. Must be a string with unit
+  color_hyperlink: rgb(0, 0, 255),   // Can be either a colour string or a rgb() value
 )
 
 // Merge with defaults for any missing settings
-#let convert_string_to_length(string) = {
-  if type(string) == str {
-    if string.ends-with("pt") {
-      return float(string.replace("pt", "")) * 1pt
-    } else if string.ends-with("em") {
-      return float(string.replace("em", "")) * 1em
-    } else if string.ends-with("cm") {
-      return float(string.replace("cm", "")) * 1cm
-    } else if string.ends-with("mm") {
-      return float(string.replace("mm", "")) * 1mm
-    } else {
-      return string
-    }
-  } else {
-    return string
-  }
-}
-
-#let convert_string_to_color(string_value) = {
-  if type(string_value) == str {
-    if string_value.starts-with("rgb(") and string_value.ends-with(")") {
-      let rgb_str = string_value.slice(4, string_value.len() - 1)
-      let components = rgb_str.split(",").map(s => int(float(s.trim())))
-      if components.len() == 3 {
-        return rgb(components.at(0), components.at(1), components.at(2))
-      }
-    } else if string_value.starts-with("rgba(") and string_value.ends-with(")") {
-      let rgba_str = string_value.slice(5, string_value.len() - 1)
-      let components = rgba_str.split(",")
-      if components.len() == 4 {
-        let r = int(float(components.at(0).trim()))
-        let g = int(float(components.at(1).trim()))
-        let b = int(float(components.at(2).trim()))
-        let a = float(components.at(3).trim())
-        return rgba(r, g, b, a)
-      }
-    } else if string_value.starts-with("#") {
-      // Convert hex color to rgb
-      let hex = string_value.slice(1)
-      if hex.len() == 6 {
-        let r = int(hex.slice(0, 2), base: 16)
-        let g = int(hex.slice(2, 4), base: 16)
-        let b = int(hex.slice(4, 6), base: 16)
-        return rgb(r, g, b)
-      } else if hex.len() == 3 {
-        let r = int(hex.at(0) + hex.at(0), base: 16)
-        let g = int(hex.at(1) + hex.at(1), base: 16)
-        let b = int(hex.at(2) + hex.at(2), base: 16)
-        return rgb(r, g, b)
-      }
-    }
-  }
-  
-  // Default to blue if conversion fails
-  return rgb(0, 0, 255)  // Using integer values now
-}
-
 #let settings = if settings != none {
   // First add any missing settings from defaults
   for (k, v) in default_settings {
@@ -90,22 +44,20 @@
   }
   
   // Convert length strings to actual length values
-  if "fontsize" in settings {
-    settings.fontsize = convert_string_to_length(settings.fontsize)
-  }
-  if "linespacing" in settings {
-    settings.linespacing = convert_string_to_length(settings.linespacing)
-  }
-  if "sectionspacing" in settings {
-    settings.sectionspacing = convert_string_to_length(settings.sectionspacing)
+  let settings_length = ("fontsize", "spacing_line", "spacing_section", "spacing_entry", "spacing_element")
+
+  // Page settings separately
+  for setting in settings_length {
+    settings.at(setting) = convert_string_to_length(settings.at(setting))
   }
   if "page" in settings and "margin" in settings.page {
     settings.page.margin = convert_string_to_length(settings.page.margin)
   }
-  
-  // Convert color strings to color values
-  if "hyperlink_color" in settings {
-    settings.hyperlink_color = convert_string_to_color(settings.hyperlink_color)
+
+  // Convert color strings to actual colors
+  let settings_color = ("color_hyperlink",)
+  for setting in settings_color {
+    settings.at(setting) = convert_string_to_color(settings.at(setting))
   }
   
   settings
@@ -146,8 +98,8 @@
     // Set hyperlink styling
     show link: it => {
         text(
-            fill: if "hyperlink_color" in settings { 
-              settings.hyperlink_color 
+            fill: if "color_hyperlink" in settings { 
+              settings.color_hyperlink 
             } else { 
               rgb(0, 0, 255) // Default blue
             },
@@ -165,24 +117,6 @@
     doc
 }
 
-// Function to create data for a section that uses the new structure
-#let get_section_data(section, cv_data) = {
-  // First check if this section has entries in it
-  if "entries" in section {
-    // Just return the entries directly - they should be in the right format
-    // This handles both array entries and dictionary entries
-    return section.entries
-  } else {
-    // If the section doesn't have entries, use the existing top-level data
-    if section.key in cv_data {
-      return cv_data.at(section.key)
-    } else {
-      // Return an empty dictionary if data is not found
-      return (:)
-    }
-  }
-}
-
 #show: doc => cvinit(doc)
 
 // Process CV sections dynamically based on the YAML configuration
@@ -191,7 +125,7 @@
     if section.at("show", default: true) == true {
       if section.key == "personal" {
         // Special case for personal/heading section
-        cvheading(cv_data, settings)
+        layout_header(cv_data, settings)
       } else {
         // Standard sections
         let layout = section.layout
@@ -204,15 +138,23 @@
         // Create a temporary dictionary with just this section's data
         let temp_data = (
           personal: cv_data.personal,  // Keep personal for reference
-          (key): section_data,         // Add this section's data
+          (key): section_data.entries,  // Add this section's entries
         )
         
+        // Add layout configuration if present
+        if "primary_element" in section_data {
+          temp_data.insert("primary_element", section_data.primary_element)
+        }
+        if "secondary_element" in section_data {
+          temp_data.insert("secondary_element", section_data.secondary_element)
+        }
+        if "tertiary_element" in section_data {
+          temp_data.insert("tertiary_element", section_data.tertiary_element)
+        }
+        
         // Call cvsection with the appropriate data
-        cvsection(temp_data, layout: layout, section: key, title: title)
+        cvsection(temp_data, layout: layout, section: key, settings: settings, title: title)
       }
     }
   }
 }
-
-// Add the endnote
-// #endnote(settings)
