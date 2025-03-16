@@ -2,48 +2,56 @@
 
 # Document settings
 settings:
-  headingfont: "Libertinus Serif"
-  bodyfont: "Libertinus Serif"
-  fontsize: 10pt      # Must be a string with unit
-  sectionspacing: 12pt  # Space between sections. Must be a string with unit
-  entry_spacing: 0.1em  # Space between entries within a section. Must be a string with unit
-  element_spacing: 3pt  # Space between elements within an entry. Must be a string with unit
-  linespacing: 5pt      # Space between lines within an element. Must be a string with unit
-  hyperlink_color: rgb(230, 130, 87)   # Can be either a colour string or a rgb() value
-  show_address: false
-  show_number: false
-  show_title: false
-  headingsmallcaps: false
-  sendnote: false
+  font_heading: "Libertinus Serif"
+  font_body: "Libertinus Serif"
+  fontsize: 10pt
+  spacing_section: 12pt
+  spacing_entry: 0.1em
+  spacing_element: 3pt
+  spacing_line: 5pt
+  color_hyperlink: rgb(50, 120, 180)
   page:
     paper: "a4"
     numbering: "1 / 1"
-    number-align: "center"  # Must be "center", "left", or "right"
-    margin: 3.5cm        # Must be a string with unit
+    number-align: "center"
+    margin: 3.5cm
 
 # Personal information
 personal:
-  name: Mikkel Roald-Arbøl
-  email: mikkel@roald-arboel.com
-  phone: (+45) 20320399
-  url: https://roald-arboel.com
+  name: John Doe
   titles:
-    - Doctoral Researcher in Computational ethology
+    - Senior Data Scientist
+    - Machine Learning Specialist
   location:
-    city: Copenhagen
-    region: Copenhagen
-    country: Denmark
+    city: San Francisco
+    country: USA
+  contact:
+    email: john.doe@example.com
+    phone: "(555) 123-4567"
+    website: https://johndoe.dev
   profiles:
     - network: GitHub
-      username: roaldarbol
-      url: https://github.com/roaldarbol
+      username: johndoe
+      url: https://github.com/johndoe
+    - network: LinkedIn
+      username: johndoe
+      url: https://linkedin.com/in/johndoe
 
 # Section definitions and content
 sections:
   - key: personal
-    layout: heading
+    layout: header
     show: true
-    # No entries or title for personal - uses the top-level personal section
+    include: ["titles", "location", "contact"]
+
+  - key: statement
+    layout: prose
+    title: Professional Summary
+    show: true
+    entries:
+      - I am a data scientist and machine learning specialist with over 5 years of experience developing innovative AI solutions for complex problems. My expertise lies in computer vision, natural language processing, and reinforcement learning, with a proven track record of translating research into production-ready systems. I am passionate about leveraging AI to create meaningful impact and committed to staying at the forefront of technological advancements in the field.
+      
+      # - My research has been published in top-tier conferences and journals, and I take pride in mentoring junior data scientists and contributing to open-source projects. I thrive in collaborative environments where I can apply my technical expertise and creative problem-solving skills to tackle challenging real-world problems.
 
   - key: education
     layout: timeline
@@ -52,212 +60,118 @@ sections:
     title: Education
     show: true
     entries:
-      - institution: University of Sussex
-        location: Brighton, UK
-        title: Ph.D. in Biology
-        start_date: 2020
-        end_date: Present
-      - institution: University of Copenhagen
-        location: Copenhagen, DK
-        title: M.Sc. in Human Biology
-        start_date: 2017
+      - institution: Stanford University
+        location: Stanford, CA
+        title: Ph.D. in Computer Science, Machine Learning
+        start_date: 2015
         end_date: 2019
-      - institution: University of Copenhagen
-        location: Copenhagen, DK
-        title: B.Sc. in Exercise and Sports Sciences
+      - institution: Massachusetts Institute of Technology
+        location: Cambridge, MA
+        title: M.S. in Computer Science
         start_date: 2013
-        end_date: 2016
+        end_date: 2015
+      - institution: University of California, Berkeley
+        location: Berkeley, CA
+        title: B.S. in Computer Science
+        start_date: 2009
+        end_date: 2013
 
   - key: experience
     layout: timeline
     primary_element: ["institution"]
-    secondary_element: ["advisors"]  # Explicitly include advisors at secondary level
+    secondary_element: ["title"]
     tertiary_element: ["description"]
-    title: Experience
+    title: Professional Experience
     show: true
     entries:
-      - institution: University of Sussex
-        advisors: ["Jeremy Niven"]
-        start_date: 10/2020
-        end_date: 2/2025
+      - institution: TechCorp AI
+        title: Senior Data Scientist
+        start_date: 01/2020
+        end_date: Present
         description: |
-          Some long text describing what I did for this project.
-      - institution: University of Copenhagen
-        advisors: ["Rune W. Berg", "Tom Cat"]
-        start_date: 10/2019
-        end_date: 1/2020
+          Lead a team of five data scientists developing computer vision algorithms for autonomous systems. Developed and deployed machine learning models that improved object detection accuracy by 35% while reducing false positives by 40%. Collaborated with cross-functional teams to integrate AI solutions into production systems.
+      - institution: DataViz Solutions
+        title: Machine Learning Engineer
+        start_date: 06/2019
+        end_date: 12/2019
         description: |
-          Some more text
-      - institution: University of Sussex
-        advisors: ["Jeremy Niven"]
-        start_date: 9/2018
-        end_date: 8/2019
+          Designed and implemented natural language processing systems for customer sentiment analysis. Created a scalable pipeline for processing over 1 million text documents daily. Reduced model training time by 60% through optimization techniques.
+      - institution: Stanford AI Lab
+        title: Research Assistant
+        start_date: 09/2015
+        end_date: 05/2019
         description: |
-          Some more text
-      - institution: University of Queensland
-        advisors: ["Timothy Carroll"]
-        start_date: 1/2017
-        end_date: 5/2017
-        description: |
-          Some more text
-      - institution: University of Queensland
-        advisors: ["Luke Kelly"]
-        start_date: 9/2016
-        end_date: 12/2016
-        description: |
-          Some more text
-      - institution: University of Copenhagen
-        advisors: ["Jesper Lundbye-Jensen"]
-        start_date: 9/2015
-        end_date: 12/2016
-        description: |
-          Some more text
+          Conducted research on reinforcement learning algorithms for robotic applications. Published three papers in top-tier ML conferences (NeurIPS, ICML). Developed open-source libraries for deep reinforcement learning research.
 
   - key: publications
     layout: numbered_list
     title: Publications
     show: true
     entries:
-      - "*Roald-Arbøl, M.*, Yarwood, E., Fernandes, A. S. D., Moubarak, E. M., Drees, C., Schuett, W., & Niven, J. E. (2025). A Low-Cost Trackball System for Automated Movement Capture Allowing Assessment of the Repeatability of Movement for Behavioural Ecology. _In prep_"
+      - "*Doe, J.*, Smith, A., & Johnson, B. (2023). Attention-based Transformers for Multi-modal Sensing in Autonomous Systems. In *Proceedings of the International Conference on Machine Learning* (ICML 2023)."
 
-      - "Sobianin, I., Ngotho, S. G., Spector, M. B., *Roald-Arbøl, M.*, Vignal, E., Perineti, C. L., Ellison, L., Al Balush, S., Carriero, A., Eley, M., Cozan, M., Demirbatir, C., Dominiak, S. E., Janiak, F., Frazao, J., Maravall, M., Lagnado, L., Schröder, S., Kemenes, G., Baden T., Niven J. E., King S., Nowotny T., Chagas, A. M. (2025). BeeHive: A flexible open electronics platform for designing research equipment. _In prep_"
+      - "Wang, L., *Doe, J.*, & Chen, H. (2022). Efficient Transfer Learning Methods for Low-Resource NLP Tasks. *Journal of Artificial Intelligence Research*, 73, 1420-1445."
 
-      - "Verbinnen, G., *Roald-Arbøl, M.*, Niven, J. E., & Nicholls, E. (2024). Shifts in honeybee worker metabolism immediately post-eclosion (p. 2024.12.01.622772). _bioRxiv_. https://doi.org/10.1101/2024.12.01.622772"
+      - "*Doe, J.* & Martinez, S. (2020). A Novel Approach to Uncertainty Estimation in Deep Reinforcement Learning. In *Advances in Neural Information Processing Systems* (NeurIPS 2020)."
+
+      # - "Thompson, R., *Doe, J.*, & Kumar, P. (2019). Robust Policy Optimization for Real-world Robotics Applications. In *Proceedings of the International Conference on Robotics and Automation* (ICRA 2019)."
 
   - key: teaching
     layout: timeline
     primary_element: ["title", "institution"]
-    secondary_element: ["professors"]  # Explicitly include advisors at secondary level
+    secondary_element: ["professors"]
     tertiary_element: ["description"]
-    title: Teaching
+    title: Teaching Experience
     show: true
     entries:
-      - institution: University of Sussex
-        title: Mediterranean Ecology Field Course
-        professors: ["Paul Graham", "Valentina Scarponi"]
-        start_date: 2024
+      - institution: Stanford University
+        title: Advanced Machine Learning
+        professors: ["Prof. Sarah Johnson"]
+        start_date: 2018
+        end_date: 2019
         description: |
-          Some more text
-      - institution: University of Sussex
-        title: Coastal Ecology Field Course
-        professors: ["Claudia Drees"]
-        start_date: 2022
-        end_date: 2024
+          Teaching assistant for graduate-level course. Led weekly discussion sections, created homework assignments, and held office hours for a class of 120 students.
+      - institution: Stanford University
+        title: Introduction to Artificial Intelligence
+        professors: ["Prof. Michael Brown", "Prof. Lisa Chen"]
+        start_date: 2017
+        end_date: 2018
         description: |
-          Some more text
-      - institution: University of Sussex
-        title: Statistics
-        professors: ["Jane", "Luc"]
-        start_date: 2022
-        end_date: 2024
+          Teaching assistant for undergraduate course. Developed programming assignments and grading rubrics. Received Teaching Excellence Award based on student evaluations.
+      - institution: MIT OpenCourseWare
+        title: Python for Data Science
+        start_date: 2016
         description: |
-          Some more text
-      - institution: University of Sussex
-        title: Research Methods
-        professors: ["Wiebke Schuett"]
-        start_date: 2021
-        end_date: 2022
-        description: |
-          Some more text
-      - institution: University of Copenhagen
-        title: Athletics 1 & 2
-        professors: ["Mikkel Sørensen", "Birger Fisker"]
-        start_date: 2015
-        end_date: 2016
-        description: |
-          Some more text
+          Created and recorded a series of online tutorials covering Python programming for data analysis and machine learning applications. Course has been accessed by over 50,000 students worldwide.
 
   - key: awards
     layout: timeline
     primary_element: ["title", "institution"]
     tertiary_element: ["description"]
-    title: Scholarships & Awards
+    title: Honors & Awards
     show: true
     entries:
-      - institution: Janelia Research Campus
-        title: Junior Scientist Workshop in Mechanistic Cognitive Neuroscience 
-        start_date: 2023
-        description: |
-          Highly competitive workshop that also covered all expenses, including flights and accommodation.
-      - institution: University of Sussex
-        title: "Sussex Life Sciences PhD Symposium: Best talk"
-        start_date: 2023
-      - institution: The Association for the Study of Animal Behaviour
-        title: Travel Grant
-        start_date: 2023 
-      - institution: Sussex Neuroscience PG Fund
-        title: Travel Grant
-        start_date: 2023
-      - institution: University of Sussex
-        title: Sussex Doctoral Open Research Prize
+      - institution: Association for Computing Machinery (ACM)
+        title: Rising Star in Artificial Intelligence
         start_date: 2022
         description: |
-          This inaugural award was awarded to postgraduate researchers for an extraordinary effort in promoting open research practices. With the award came two months extra PhD funding.
-
-      - institution: Art in Science Photo Competition, 
-        title: Best Instrument, _Art in Science Photo Competition_
+          Annual award recognizing early-career researchers with exceptional contributions to the field of artificial intelligence.
+      - institution: NeurIPS
+        title: Best Paper Award
+        start_date: 2020
+        description: |
+          Awarded for our paper "A Novel Approach to Uncertainty Estimation in Deep Reinforcement Learning."
+      - institution: Stanford University
+        title: Outstanding Doctoral Dissertation
         start_date: 2019
         description: |
-          Highly competitive workshop that also covered all expenses, including flights and accommodation.
-
-      - institution: Erasmus+, Knud Højgaards Fond, Fam. Hede Nielsen Fond, Oticon Fonden
-        title: Travel Grants
+          Awarded for dissertation "Advancing Reinforcement Learning for Real-world Applications."
+      - institution: Stanford Computer Science Department
+        title: Teaching Excellence Award
         start_date: 2018
+      - institution: National Science Foundation
+        title: Graduate Research Fellowship
+        start_date: 2015
+        end_date: 2018
         description: |
-          To be able to do my M.Sc thesis at University of Sussex, I secured several competitive travel grants totalling 25.000DKK (Knud H.), 7.500DKK (Fam. Hede Nielsen), 13.500DKK (Oticon), 23.388DKK (Erasmus+) 59.388DKK
-
-# skills:
-#   - category: Soft Skills
-#     skills:
-#       - Public Speaking
-#       - Debating
-#       - Communication
-#       - Critical Thinking
-#       - Leadership
-#       - Persuasive Writing
-#       - Technical Writing
-#   - category: Programming
-#     skills:
-#       - Python
-#       - SQL, PostgreSQL
-#       - MATLAB/Octave
-#       - HTML
-#       - CSS
-#       - Javascript
-#       - Typst
-#       - LaTeX
-#   - category: Tools
-#     skills:
-#       - Microsoft Word
-#       - Git
-#       - Docker
-#       - Visual Studio Code
-#       - Canva
-#   - category: Web Development
-#     skills:
-#       - React
-#       - Next.js
-#       - million.js
-#       - Svelte & Sveltekit
-#       - Tailwind CSS
-#       - Node.js
-#       - Deno
-#       - FastAPI
-#       - Flask
-#   - category: BI & Data Analytics
-#     skills:
-#       - Microsoft Excel
-#       - Microsoft Power BI
-#       - Jupyter Notebook
-#       - Numpy
-#       - Pandas
-#       - Plotly
-#       - Altair
-
-# languages:
-#   - language: English
-#     fluency: Native speaker
-#   - language: German
-#     fluency: Native speaker
-#   - language: Japanese
-#     fluency: Basic proficiency
+          Three-year fellowship funding doctoral research in computer science.

@@ -23,63 +23,17 @@ See [**example CV**](https://github.com/jskherman/imprecv/releases/latest/downlo
 <table cellspacing="0" style="border-collapse: collapse !important; border-spacing: 0 !important;">
  <tr>
   <td>
-   <img src="https://github.com/jskherman/imprecv/raw/main/assets/thumbnail.1.png" alt="Sample CV Page 1">
+   <img src="https://github.com/roaldarbol/academicv/raw/main/assets/thumbnail_1.png" alt="Sample CV Page 1">
   </td>
   <td>
-   <img src="https://github.com/jskherman/imprecv/raw/main/assets/thumbnail.2.png" alt="Sample CV Page 2">
+   <img src="https://github.com/roaldarbol/academicv/raw/main/assets/thumbnail_2.png" alt="Sample CV Page 2">
   </td>
  </tr>
 </table>
 
-<!-- <div align="center">
-  <img src="https://github.com/jskherman/imprecv/raw/main/assets/thumbnail.1.png" alt="Sample CV Page 1" style="float: left; width: 49%; height: auto;">
-  <img src="https://github.com/jskherman/imprecv/raw/main/assets/thumbnail.2.png" alt="Sample CV Page 2" style="float: left; width: 49%; height: auto;">
-</div> -->
-
-<!-- 
-`imprecv` is intended to be used by importing the `cv.typ` file from a "content"
-file (see [`template.typ`](template/template.typ) as an example). In this content file,
-call the functions which apply document styles, show CV components, and load CV
-data from a YAML file (see [`template.yml`](template/template.yml) as an example). Inside
-the content file you can modify several style variables and even override
-existing function implementations to your own needs and preferences.
-
-### With the [Typst CLI](https://github.com/typst/typst)
-
-The recommended usage with Typst CLI is by adding this `imprecv` repository as a [git
-submodule](https://git-scm.com/book/en/v2/Git-Tools-Submodules). This way, upstream changes can be
-pulled easily.
-
-```text
-<your-cv-repo>/
-├── imprecv/     % git submodule 
-|   └── cv.typ
-├── <your-cv-content>.typ    % use #import "imprecv/cv.typ": *
-└── <your-cv-data>.yml
-```
-
-1. Add [jskherman/imprecv](https://github.com/jskherman/imprecv) as git submodule.
-into your CV's repo.
-
-  ```text
-  git submodule add https://github.com/jskherman/imprecv
-  ```
-
-2. Copy and rename `template.typ` and `template.yml` from the `template` folder to your CV's repo root directory.
-   Use these files as template/starting point for your CV.
-
-3. Run the following to command to automatically recompile your CV file on changes.
-
-  ```bash
-  typst watch <your-cv-content>.typ
-  ```
-
-Take a look at the [example setup](https://github.com/jskherman/cv.typ-example-repo) for ideas on how to get started. It includes a GitHub action workflow to compile the Typst files to PDF and upload it to Cloudflare R2.
--->
-
 ## Usage
 
-This `imprecv` is intended to be used by importing the template's [package entrypoint](cv.typ) from a "content" file (see [`template.typ`](template/template.typ) as an example).
+This `academicv` is intended to be used by importing the template's [package entrypoint](cv.typ) from a "content" file (see [`template.typ`](template/template.typ) as an example).
 In this content file, call the functions which apply document styles, show CV components, and load CV data from a YAML file (see [`template.yml`](template/template.yml) as an example).
 Inside the content file you can modify several style variables and even override existing function implementations to your own needs and preferences.
 
