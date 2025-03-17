@@ -1,6 +1,6 @@
-#let layout_prose(data, isbreakable: true) = {
+#let layout-prose(data, isbreakable: true) = {
   // Set left margin to match the numbered list for consistency
-  let left_margin = 2em
+  let left-margin = 2em
   
   block(width: 100%, breakable: isbreakable)[
     // Check if data is an array (direct list of citations/text items)
@@ -11,7 +11,7 @@
           columns: (1fr),
           
           // Item text with markup, padded from the left to align with numbered list
-          pad(left: left_margin)[
+          pad(left: left-margin)[
             #eval(item, mode: "markup")
           ]
         )
@@ -23,7 +23,7 @@
       }
     } else if type(data) == str {
       // If it's a single string, just display it with the same padding
-      pad(left: left_margin)[
+      pad(left: left-margin)[
         #eval(data, mode: "markup")
       ]
     } else {

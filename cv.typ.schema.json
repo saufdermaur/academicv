@@ -12,29 +12,29 @@
     "settings": {
       "type": "object",
       "properties": {
-        "font_heading": { "type": "string" },
-        "font_body": { "type": "string" },
+        "font-heading": { "type": "string" },
+        "font-body": { "type": "string" },
         "fontsize": { 
           "type": "string",
           "description": "Font size with unit, e.g. '10pt'"
         },
-        "spacing_line": { 
+        "spacing-line": { 
           "type": "string",
           "description": "Line spacing within elements with unit, e.g. '5pt'"
         },
-        "spacing_section": { 
+        "spacing-section": { 
           "type": "string",
           "description": "Spacing between major sections with unit, e.g. '12pt'"
         },
-        "spacing_entry": { 
+        "spacing-entry": { 
           "type": "string",
           "description": "Spacing between entries within a section, e.g. '0.1em'"
         },
-        "spacing_element": { 
+        "spacing-element": { 
           "type": "string",
           "description": "Spacing between elements within an entry (primary/secondary/tertiary), e.g. '3pt'"
         },
-        "color_hyperlink": { 
+        "color-hyperlink": { 
           "type": "string", 
           "description": "Color for hyperlinks in format 'rgb(r, g, b)', 'rgba(r, g, b, a)', or hex like '#577FE6'"
         },
@@ -153,7 +153,7 @@
           "layout": {
             "type": "string",
             "description": "The layout type to use for this section",
-            "enum": ["header", "timeline", "timeline_title", "numbered_list", "prose"]
+            "enum": ["header", "timeline", "timeline-title", "numbered-list", "prose"]
           },
           "title": {
             "type": "string",
@@ -171,7 +171,7 @@
             },
             "description": "List of elements to include in the header layout"
           },
-          "primary_element": {
+          "primary-element": {
             "oneOf": [
               {
                 "type": "string",
@@ -186,7 +186,7 @@
               }
             ]
           },
-          "secondary_element": {
+          "secondary-element": {
             "oneOf": [
               {
                 "type": "string",
@@ -201,7 +201,7 @@
               }
             ]
           },
-          "tertiary_element": {
+          "tertiary-element": {
             "oneOf": [
               {
                 "type": "string",
@@ -229,8 +229,8 @@
                         "institution": { "type": "string" },
                         "location": { "type": "string" },
                         "title": { "type": "string" },
-                        "start_date": { "type": ["string", "number"] },
-                        "end_date": { "type": ["string", "number", "null"] },
+                        "start-date": { "type": ["string", "number"] },
+                        "end-date": { "type": ["string", "number", "null"] },
                         "description": { "type": "string" },
                         "advisors": { 
                           "type": "array",

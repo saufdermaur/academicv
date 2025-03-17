@@ -1,6 +1,6 @@
-#let layout_numbered_list(data, isbreakable: true) = {
+#let layout-numbered-list(data, isbreakable: true) = {
   // Set width for the number column
-  let number_width = 2em
+  let number-width = 2em
   
   block(width: 100%, breakable: isbreakable)[
     // Check if data is an array (direct list of citations)
@@ -8,7 +8,7 @@
       for (index, citation) in data.enumerate() {
         // Create a grid with two columns
         grid(
-          columns: (number_width, 1fr),
+          columns: (number-width, 1fr),
           gutter: 1em,
           
           // Right-aligned number in the first column
