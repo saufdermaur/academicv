@@ -1,6 +1,6 @@
-#let layout_bullet_list(data, isbreakable: true) = {
+#let layout-bullet-list(data, isbreakable: true) = {
   // Set width for the bullet column
-  let bullet_width = 2em
+  let bullet-width = 2em
   
   block(width: 100%, breakable: isbreakable)[
     // Check if data is an array
@@ -8,7 +8,7 @@
       for (index, item) in data.enumerate() {
         // Create a grid with two columns
         grid(
-          columns: (bullet_width, 1fr),
+          columns: (bullet-width, 1fr),
           gutter: 1em,
 
           // Bullet point in the first column
