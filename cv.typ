@@ -2,6 +2,7 @@
 
 #import "layouts/header.typ": layout_header
 #import "layouts/numbered_list.typ": layout_numbered_list
+#import "layouts/bullet_list.typ" : layout_bullet_list
 #import "layouts/prose.typ": layout_prose
 #import "layouts/timeline.typ": layout_timeline
 
@@ -106,6 +107,8 @@
                                    isbreakable: isbreakable)
                 } else if layout == "numbered_list" {
                     layout_numbered_list(info.at(section_key), isbreakable: isbreakable)
+                } else if layout == "bullet_list"{
+                    layout_bullet_list(info.at(section_key), isbreakable: isbreakable)
                 } else {
                     [No layout function defined for "#layout"]
                 }
